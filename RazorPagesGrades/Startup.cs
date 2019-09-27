@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RazorPagesGrades.Services;
+using RazorPagesGrades.Helpers;
 
 namespace RazorPagesGrades
 {
@@ -30,6 +32,9 @@ namespace RazorPagesGrades
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddSingleton<GradeBook>(); 
+            services.AddSingleton<ISubjectCreator>(x => x.GetRequiredService<GradeBook>());
+            services.AddSingleton<IGradeCreator>(x => x.GetRequiredService<GradeBook>());
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
@@ -40,6 +45,9 @@ namespace RazorPagesGrades
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseStatusCodePages();
+
+                app.SeedData();
             }
             else
             {
