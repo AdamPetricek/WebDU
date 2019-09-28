@@ -17,6 +17,11 @@ namespace RazorPagesGrades.Pages.Grade
             _gradebook = gb;
         }
 
+        [TempData]
+        public string MessageSuccess { get; set; }
+        [TempData]
+        public string MessageError { get; set; }
+
         public List<GradeViewModel> Grades { get; set; }
 
         public void OnGet()

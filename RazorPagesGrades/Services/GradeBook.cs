@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using RazorPagesGrades.Models;
 
 namespace RazorPagesGrades.Services
 {
-    public class GradeBook: IGradebook, ISubjectManipulator, IGradeManipulator
+    public class GradeBook : IGradebook, ISubjectManipulator, IGradeManipulator
     {
         /// <summary>
         ///   Řešení úschovy (částečně) persistentních dat
@@ -15,6 +16,16 @@ namespace RazorPagesGrades.Services
         private SortedDictionary<string, Subject> _subjects { get; set; } = new SortedDictionary<string, Subject>();
 
         public Dictionary<Guid, Grade> _grades { get; set; } = new Dictionary<Guid, Grade>();
+
+        public List<SelectListItem> SubjectListItems
+        {
+            get
+            {
+                var list = new List<SelectListItem>(_subjects.Select(x => { return new SelectListItem() { Value = x.Key, Text = x.Key + " (" + x.Value.Name + ")" }; }));
+                
+                return list;
+            }
+        }
 
         private static readonly Random random = new Random();
 
@@ -35,7 +46,7 @@ namespace RazorPagesGrades.Services
             for (int i = 0; i < count; i++)
             {
                 var subject = _subjects.ElementAt(random.Next(0, _subjects.Count)).Value;
-                var grade = new Grade() { Id = Guid.NewGuid(), Subject = subject, Value = random.Next(2, 11) * 0.5 , Weight = random.Next(1, 11) };
+                var grade = new Grade() { Id = Guid.NewGuid(), Subject = subject, Value = random.Next(2, 11) * 0.5, Weight = random.Next(1, 11) };
                 _grades.TryAdd(grade.Id, grade);
             }
         }
@@ -48,6 +59,16 @@ namespace RazorPagesGrades.Services
         public IEnumerable<Grade> GetGrades(string subjectAcronym)
         {
             return _grades.Values.Where(g => g.Subject.Acronym.Contains(subjectAcronym.ToUpper()));
+        }
+
+        public bool AddGrade(string acronym, double value, int weight)
+        {
+            if (!_subjects.ContainsKey(acronym)) return false;
+
+            var grade = new Grade() { Id = Guid.NewGuid(), Subject = _subjects[acronym], Value = value, Weight = weight };
+            _grades.TryAdd(grade.Id, grade);
+
+            return true;
         }
     }
 }

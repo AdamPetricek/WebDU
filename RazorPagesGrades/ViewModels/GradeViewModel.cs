@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using RazorPagesGrades.Services;
 
 namespace RazorPagesGrades.ViewModels
 {
@@ -14,7 +12,7 @@ namespace RazorPagesGrades.ViewModels
         public Guid Id { get; set; }
 
         [Display(Name = "Zkratka", GroupName = "Skupina předměty", Description = "Třípísmenná zkratka vyučovaného předmětu.")]
-        [StringLength(3, ErrorMessage = "Musí obsahovat tři znaky", MinimumLength = 3)]
+        [StringLength(maximumLength: 3, ErrorMessage = "Musí obsahovat tři znaky")]
         public string Acronym { get; set; }
 
         [Display(Name = "Předmět", GroupName = "Skupina předměty", Description = "Název nebo označení vyučovaného předmětu.")]
