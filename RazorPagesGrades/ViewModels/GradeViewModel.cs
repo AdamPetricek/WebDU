@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using RazorPagesGrades.Services;
 
 namespace RazorPagesGrades.ViewModels
 {
@@ -19,6 +21,7 @@ namespace RazorPagesGrades.ViewModels
         public string Subject { get; set; }
 
         [Display(Name = "Známka")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Známka musí být vyplněna")]
         [Range(1, 5, ErrorMessage = "Známka musí být mezi {1} a {2}.")]
         public double Value { get; set; }
 

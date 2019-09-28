@@ -4,14 +4,29 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using RazorPagesGrades.Services;
+using RazorPagesGrades.ViewModels;
 
 namespace RazorPagesGrades.Pages.Grade
 {
     public class IndexModel : PageModel
     {
+        IGradebook _gradebook;
+        public IndexModel(IGradebook gb)
+        {
+            _gradebook = gb;
+        }
+
+        public List<GradeViewModel> Grades { get; set; }
+
         public void OnGet()
         {
+            Grades = new List<GradeViewModel>();
 
+            foreach (var grade in _gradebook.GetAllGrades())
+            {
+                Grades.Add(new GradeViewModel() { Id = grade.Id, Subject = grade.Subject.Name, Acronym = grade.Subject.Acronym, Value = grade.Value, Weight = grade.Weight });
+            }
         }
     }
 }
