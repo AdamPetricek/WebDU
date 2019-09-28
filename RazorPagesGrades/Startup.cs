@@ -33,8 +33,9 @@ namespace RazorPagesGrades
             });
 
             services.AddSingleton<GradeBook>(); 
-            services.AddSingleton<ISubjectCreator>(x => x.GetRequiredService<GradeBook>());
-            services.AddSingleton<IGradeCreator>(x => x.GetRequiredService<GradeBook>());
+            services.AddSingleton<ISubjectManipulator>(x => x.GetRequiredService<GradeBook>());
+            services.AddSingleton<IGradeManipulator>(x => x.GetRequiredService<GradeBook>());
+            services.AddSingleton<IGradebook>(x => x.GetRequiredService<GradeBook>());
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

@@ -20,8 +20,8 @@ namespace RazorPagesGrades.Helpers
         {
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
-                var sc = serviceScope.ServiceProvider.GetService<ISubjectCreator>();
-                var gc = serviceScope.ServiceProvider.GetService<IGradeCreator>();
+                var sc = serviceScope.ServiceProvider.GetService<ISubjectManipulator>();
+                var gc = serviceScope.ServiceProvider.GetService<IGradeManipulator>();
                 sc.SeedSubjects();
                 gc.SeedGrades(25);
             }

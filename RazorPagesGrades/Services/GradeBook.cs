@@ -6,7 +6,7 @@ using RazorPagesGrades.Models;
 
 namespace RazorPagesGrades.Services
 {
-    public class GradeBook: ISubjectCreator, IGradeCreator
+    public class GradeBook: IGradebook, ISubjectManipulator, IGradeManipulator
     {
         /// <summary>
         ///   Řešení úschovy (částečně) persistentních dat
@@ -38,6 +38,16 @@ namespace RazorPagesGrades.Services
                 var grade = new Grade() { Id = Guid.NewGuid(), Subject = subject, Value = random.Next(2, 11) * 0.5 , Weight = random.Next(1, 11) };
                 _grades.TryAdd(grade.Id, grade);
             }
+        }
+
+        public IEnumerable<Grade> GetAllGrades()
+        {
+            return _grades.Values;
+        }
+
+        public IEnumerable<Grade> GetGrades(string subjectAcronym)
+        {
+            return _grades.Values.Where(g => g.Subject.Acronym.Contains(subjectAcronym.ToUpper()));
         }
     }
 }

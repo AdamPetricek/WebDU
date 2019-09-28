@@ -8,25 +8,25 @@
 
 @if (showBanner)
 {
-    <nav id="cookieConsent" class="navbar navbar-default navbar-fixed-top" role="alert">
+
+    <nav id="cookieConsent" class="navbar navbar-light bg-light navbar-expand-sm" role="alert">
         <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#cookieConsent .navbar-collapse">
-                    <span class="sr-only">Toggle cookie consent banner</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <span class="navbar-brand"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></span>
-            </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#cookieConsent .navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <p class="navbar-text pr-2">
+                Accept GDPR policy.
+            </p>
             <div class="collapse navbar-collapse">
                 <p class="navbar-text">
-                    Use this space to summarize your privacy and cookie use policy.
+                    Use this space to summarize your privacy and cookie use policy. 
                 </p>
                 <div class="navbar-right">
-                    <a asp-page="/Privacy" class="btn btn-info navbar-btn">Learn More</a>
-                    <button type="button" class="btn btn-default navbar-btn" data-cookie-string="@cookieString">Accept</button>
+                    <a asp-page="/Privacy" class="btn btn-info navbar-btn">Learn&nbsp;More</a>
                 </div>
+            </div>
+            <div>
+                <button type="button" class="btn btn-primary navbar-btn" data-cookie-string="@cookieString">Accept</button>
             </div>
         </div>
     </nav>

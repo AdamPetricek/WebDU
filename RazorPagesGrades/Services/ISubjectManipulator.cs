@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using RazorPagesGrades.Models;
 
 namespace RazorPagesGrades.Services
 {
-    interface IGradeCreator
+    public interface ISubjectManipulator
     {
-        void SeedGrades(int count);
+        void SeedSubjects();
     }
 }
