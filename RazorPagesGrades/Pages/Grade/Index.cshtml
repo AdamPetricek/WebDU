@@ -30,6 +30,7 @@
                     <th>@Html.DisplayNameFor(m => m.Grades.FirstOrDefault().Subject)</th>
                     <th>@Html.DisplayNameFor(m => m.Grades.FirstOrDefault().ValWithMinus)</th>
                     <th>@Html.DisplayNameFor(m => m.Grades.FirstOrDefault().WeightAlpha)</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -40,6 +41,7 @@
                         <td>@item.Subject</td>
                         <td>@item.ValWithMinus</td>
                         <td>@item.WeightAlpha</td>
+                        <td><a asp-page-handler="remove" asp-route-id="@item.Id" class="btn btn-outline-secondary">&times;</a></td>
                     </tr>
                 }
             </tbody>

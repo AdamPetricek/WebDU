@@ -70,5 +70,10 @@ namespace RazorPagesGrades.Services
 
             return true;
         }
+
+        public bool RemoveGrade(Guid id)
+        {
+            return _grades.Remove(id);
+        }
     }
 }

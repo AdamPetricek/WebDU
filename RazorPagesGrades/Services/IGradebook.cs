@@ -11,5 +11,6 @@ namespace RazorPagesGrades.Services
         IEnumerable<Grade> GetAllGrades();
         IEnumerable<Grade> GetGrades(string subjectAcronym);
         bool AddGrade(string acronym, double value, int weight);
+        bool RemoveGrade(Guid id);
     }
 }

@@ -14,6 +14,7 @@ namespace RazorPagesGrades.Pages.Grade
         IGradebook _gradebook;
         public IndexModel(IGradebook gb)
         {
+            Grades = new List<GradeViewModel>();
             _gradebook = gb;
         }
 
@@ -32,6 +33,14 @@ namespace RazorPagesGrades.Pages.Grade
             {
                 Grades.Add(new GradeViewModel() { Id = grade.Id, Subject = grade.Subject.Name, Acronym = grade.Subject.Acronym, Value = grade.Value, Weight = grade.Weight });
             }
+        }
+
+        public IActionResult OnGetRemove(Guid id)
+        {
+            if (_gradebook.RemoveGrade(id)) 
+                MessageSuccess += "Record removed successfully (" + id + ")";
+
+            return RedirectToPage("./Index");
         }
     }
 }
