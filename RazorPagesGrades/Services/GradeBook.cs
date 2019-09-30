@@ -65,15 +65,25 @@ namespace RazorPagesGrades.Services
         {
             if (!_subjects.ContainsKey(acronym)) return false;
 
-            var grade = new Grade() { Id = Guid.NewGuid(), Subject = _subjects[acronym], Value = value, Weight = weight };
-            _grades.TryAdd(grade.Id, grade);
+            var grade = GradeCreate(acronym, value, weight);
+            return _grades.TryAdd(grade.Id, grade);
+        }
 
-            return true;
+        public bool AddGrade(Grade grade)
+        {
+            return _grades.TryAdd(grade.Id, grade);
         }
 
         public bool RemoveGrade(Guid id)
         {
             return _grades.Remove(id);
+        }
+
+        public Grade GradeCreate(string acronym, double value, int weight)
+        {
+            if (!_subjects.ContainsKey(acronym)) throw new KeyNotFoundException("Subject with Acronym " + acronym + " not found.");
+
+            return new Grade() { Id = Guid.NewGuid(), Subject = _subjects[acronym], Value = value, Weight = weight };
         }
     }
 }
