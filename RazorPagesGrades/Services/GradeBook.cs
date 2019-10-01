@@ -85,5 +85,18 @@ namespace RazorPagesGrades.Services
 
             return new Grade() { Id = Guid.NewGuid(), Subject = _subjects[acronym], Value = value, Weight = weight };
         }
+
+        public Grade GetGrade(Guid id)
+        {
+            return _grades.GetValueOrDefault(id);
+        }
+
+        public bool EditGrade(Grade grade)
+        {
+            if (!_grades.ContainsKey(grade.Id)) return false;
+
+            _grades[grade.Id] = grade;
+            return true;
+        }
     }
 }

@@ -32,6 +32,7 @@ namespace RazorPagesGrades
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddTransient<ICertificate, CertificateTable>();
             services.AddSingleton<GradeBook>(); 
             services.AddSingleton<ISubjectManipulator>(x => x.GetRequiredService<GradeBook>());
             services.AddSingleton<IGradeManipulator>(x => x.GetRequiredService<GradeBook>());

@@ -10,8 +10,10 @@ namespace RazorPagesGrades.Services
     {
         IEnumerable<Grade> GetAllGrades();
         IEnumerable<Grade> GetGrades(string subjectAcronym);
+        Grade GetGrade(Guid id);
         bool AddGrade(string acronym, double value, int weight);
         bool AddGrade(Grade grade);
         bool RemoveGrade(Guid id);
+        bool EditGrade(Grade grade);
     }
 }
