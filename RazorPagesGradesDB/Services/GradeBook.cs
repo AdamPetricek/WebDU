@@ -15,7 +15,7 @@ namespace RazorPagesGrades.Services
         /// </summary>
         private SortedDictionary<string, Subject> _subjects { get; set; } = new SortedDictionary<string, Subject>();
 
-        public Dictionary<Guid, Grade> _grades { get; set; } = new Dictionary<Guid, Grade>();
+        private Dictionary<Guid, Grade> _grades { get; set; } = new Dictionary<Guid, Grade>();
 
         public List<SelectListItem> SubjectListItems
         {
@@ -97,6 +97,11 @@ namespace RazorPagesGrades.Services
 
             _grades[grade.Id] = grade;
             return true;
+        }
+
+        public bool AddSubject(Subject subject)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace RazorPagesGrades.Pages
 {
     public class IndexModel : PageModel
     {
-        IGradebook _gradebook;
+        readonly IGradebook _gradebook;
         public IndexModel(IGradebook gb)
         {
             _gradebook = gb;

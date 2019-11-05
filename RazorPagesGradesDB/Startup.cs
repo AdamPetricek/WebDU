@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RazorPagesGrades.Services;
 using RazorPagesGrades.Helpers;
+using Microsoft.EntityFrameworkCore;
 
 namespace RazorPagesGrades
 {
@@ -32,11 +33,19 @@ namespace RazorPagesGrades
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddDbContext<Models.GradesContext>(o =>
+            {
+                o.UseSqlite(Configuration.GetConnectionString("GradeConStr"));
+            });
+
             services.AddTransient<ICertificate, CertificateTable>();
-            services.AddSingleton<GradeBook>();
-            services.AddSingleton<ISubjectManipulator>(x => x.GetRequiredService<GradeBook>());
-            services.AddSingleton<IGradeManipulator>(x => x.GetRequiredService<GradeBook>());
-            services.AddSingleton<IGradebook>(x => x.GetRequiredService<GradeBook>());
+            //services.AddSingleton<GradeBook>();
+            //services.AddSingleton<ISubjectManipulator>(x => x.GetRequiredService<GradeBook>());
+            //services.AddSingleton<IGradeManipulator>(x => x.GetRequiredService<GradeBook>());
+            //services.AddSingleton<IGradebook>(x => x.GetRequiredService<GradeBook>());
+            services.AddTransient<ISubjectManipulator, SubjectManipulatorDB>();
+            services.AddTransient<IGradebook, GradebookDB>();
+            services.AddTransient<IGradeManipulator, GradebookDB>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
@@ -49,7 +58,8 @@ namespace RazorPagesGrades
                 app.UseDeveloperExceptionPage();
                 app.UseStatusCodePages();
 
-                app.SeedData();
+                //only first run
+                //app.SeedData();
             }
             else
             {

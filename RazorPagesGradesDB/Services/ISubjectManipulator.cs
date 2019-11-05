@@ -11,7 +11,7 @@ namespace RazorPagesGrades.Services
     public interface ISubjectManipulator
     {
         void SeedSubjects();
-
+        bool AddSubject(Subject subject);
         List<SelectListItem> SubjectListItems { get; }
     }
 }

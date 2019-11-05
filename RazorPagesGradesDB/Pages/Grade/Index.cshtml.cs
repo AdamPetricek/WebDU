@@ -11,7 +11,7 @@ namespace RazorPagesGrades.Pages.Grade
 {
     public class IndexModel : PageModel
     {
-        IGradebook _gradebook;
+        readonly IGradebook _gradebook;
         public IndexModel(IGradebook gb)
         {
             Grades = new List<GradeViewModel>();
@@ -38,7 +38,8 @@ namespace RazorPagesGrades.Pages.Grade
         public IActionResult OnGetRemove(Guid id)
         {
             if (_gradebook.RemoveGrade(id)) 
-                MessageSuccess += "Record removed successfully (" + id + ")";
+                MessageSuccess += $"Record removed successfully ({id})";
+            else MessageError += $"Record id={id} not found!";
 
             return RedirectToPage("./Index");
         }
