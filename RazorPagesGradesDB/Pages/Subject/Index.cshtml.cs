@@ -9,6 +9,10 @@ namespace RazorPagesGrades.Pages.Subject
 {
     public class IndexModel : PageModel
     {
+        [TempData]
+        public string MessageSuccess { get; set; }
+        [TempData]
+        public string MessageError { get; set; }
         public void OnGet()
         {
 

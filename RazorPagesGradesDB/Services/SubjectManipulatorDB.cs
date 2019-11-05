@@ -31,7 +31,8 @@ namespace RazorPagesGrades.Services
 
         public bool AddSubject(Subject subject)
         {
-            if (_db.Subjects.Where(s => s.Acronym == subject.Acronym).Count() > 0) return false;
+            var temp = _db.Subjects.SingleOrDefault(s => s.Acronym == subject.Acronym.ToUpper());
+            if (!(temp is null)) return false;
             subject.Acronym = subject.Acronym.ToUpper();
             _db.Subjects.Add(subject);
             _db.SaveChanges();
