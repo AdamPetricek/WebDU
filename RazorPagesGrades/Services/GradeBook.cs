@@ -3,100 +3,89 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using RazorPagesGrades.Models;
 
 namespace RazorPagesGrades.Services
 {
-    public class GradeBook : IGradebook, ISubjectManipulator, IGradeManipulator
+    public class GradeBook : IGradebook, IGradeManipulator
     {
-        /// <summary>
-        ///   Řešení úschovy (částečně) persistentních dat
-        ///   <Akronym, Předmět>
-        /// </summary>
-        private SortedDictionary<string, Subject> _subjects { get; set; } = new SortedDictionary<string, Subject>();
+        readonly ApplicationDbContext _db;
 
-        public Dictionary<Guid, Grade> _grades { get; set; } = new Dictionary<Guid, Grade>();
-
-        public List<SelectListItem> SubjectListItems
+        public GradeBook(ApplicationDbContext db)
         {
-            get
-            {
-                var list = new List<SelectListItem>(_subjects.Select(x => { return new SelectListItem() { Value = x.Key, Text = x.Key + " (" + x.Value.Name + ")" }; }));
-                
-                return list;
-            }
-        }
-
-        private static readonly Random random = new Random();
-
-        public void SeedSubjects()
-        {
-            _subjects.TryAdd("MAT", new Subject { Acronym = "MAT", Name = "Matematika" });
-            _subjects.TryAdd("PRG", new Subject { Acronym = "PRG", Name = "Programování" });
-            _subjects.TryAdd("WEB", new Subject { Acronym = "WEB", Name = "Webové aplikace" });
-            _subjects.TryAdd("TEV", new Subject { Acronym = "TEV", Name = "Tělocvik" });
-            _subjects.TryAdd("CJL", new Subject { Acronym = "CJL", Name = "Český jazyk a literatura" });
-            _subjects.TryAdd("ANJ", new Subject { Acronym = "ANJ", Name = "Anglický jazyk" });
-        }
-
-        public void SeedGrades(int count)
-        {
-            SeedSubjects();
-
-            for (int i = 0; i < count; i++)
-            {
-                var subject = _subjects.ElementAt(random.Next(0, _subjects.Count)).Value;
-                var grade = new Grade() { Id = Guid.NewGuid(), Subject = subject, Value = random.Next(2, 11) * 0.5, Weight = random.Next(1, 11) };
-                _grades.TryAdd(grade.Id, grade);
-            }
-        }
-
-        public IEnumerable<Grade> GetAllGrades()
-        {
-            return _grades.Values;
-        }
-
-        public IEnumerable<Grade> GetGrades(string subjectAcronym)
-        {
-            return _grades.Values.Where(g => g.Subject.Acronym.Contains(subjectAcronym.ToUpper()));
+            _db = db;
         }
 
         public bool AddGrade(string acronym, double value, int weight)
         {
-            if (!_subjects.ContainsKey(acronym)) return false;
-
             var grade = GradeCreate(acronym, value, weight);
-            return _grades.TryAdd(grade.Id, grade);
+            return AddGrade(grade);
         }
 
         public bool AddGrade(Grade grade)
         {
-            return _grades.TryAdd(grade.Id, grade);
+            if (_db.Grades.Where(g => g.Id == grade.Id).Count() > 0) return false;
+            _db.Grades.Add(grade);
+            _db.SaveChanges();
+            return true;
+        }
+
+        public IEnumerable<Grade> GetAllGrades()
+        {
+            return _db.Grades.Include(g => g.Subject).ToList();
+        }
+
+
+        public IEnumerable<Grade> GetGrades(string subjectAcronym)
+        {
+            return _db.Grades.Include(g => g.Subject).Where(g => g.Subject.Acronym.Contains(subjectAcronym.ToUpper()));
         }
 
         public bool RemoveGrade(Guid id)
         {
-            return _grades.Remove(id);
+            var item = _db.Grades.SingleOrDefault(g => g.Id == id);
+            if (item is null) return false;
+
+            _db.Grades.Remove(item);
+            _db.SaveChanges();
+            return true;
         }
 
         public Grade GradeCreate(string acronym, double value, int weight)
         {
-            if (!_subjects.ContainsKey(acronym)) throw new KeyNotFoundException("Subject with Acronym " + acronym + " not found.");
+            var subject = _db.Subjects.SingleOrDefault(s => s.Acronym == acronym.ToUpper());
+            if (subject is null) throw new KeyNotFoundException("Subject with Acronym " + acronym + " not found.");
 
-            return new Grade() { Id = Guid.NewGuid(), Subject = _subjects[acronym], Value = value, Weight = weight };
+            return new Grade() { Id = Guid.NewGuid(), Subject = subject, Value = value, Weight = weight };
         }
 
         public Grade GetGrade(Guid id)
         {
-            return _grades.GetValueOrDefault(id);
+            var grade = _db.Grades.SingleOrDefault(g => g.Id == id);
+            _db.Entry<Grade>(grade).Reference(g => g.Subject).Load();
+            return grade;
+        }
+
+        private readonly static Random random = new Random();
+
+        public void SeedGrades(int count)
+        {
+            List<Subject> temp = _db.Subjects.ToList();
+            if (temp.Count < 1) return;
+
+            for (int i = 0; i < count; i++)
+            {
+                var subject = temp[random.Next(0, temp.Count)];
+                var grade = new Grade() { Id = Guid.NewGuid(), Subject = subject, Value = random.Next(2, 11) * 0.5, Weight = random.Next(1, 11) };
+                _db.Grades.Add(grade);
+            }
+            _db.SaveChanges();
         }
 
         public bool EditGrade(Grade grade)
         {
-            if (!_grades.ContainsKey(grade.Id)) return false;
-
-            _grades[grade.Id] = grade;
-            return true;
+            throw new NotImplementedException();
         }
     }
 }

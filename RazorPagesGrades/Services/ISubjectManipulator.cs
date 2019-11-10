@@ -12,6 +12,7 @@ namespace RazorPagesGrades.Services
     {
         void SeedSubjects();
 
+        bool AddSubject(Subject subject);
         List<SelectListItem> SubjectListItems { get; }
     }
 }

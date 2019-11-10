@@ -23,7 +23,6 @@ namespace RazorPagesGrades.Helpers
                 var sc = serviceScope.ServiceProvider.GetService<ISubjectManipulator>();
                 var gc = serviceScope.ServiceProvider.GetService<IGradeManipulator>();
                 sc.SeedSubjects();
-                gc.SeedGrades(25);
             }
         }
     }

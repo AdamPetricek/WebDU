@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RazorPagesGrades.Services;
 using RazorPagesGrades.Helpers;
+using Microsoft.EntityFrameworkCore;
 
 namespace RazorPagesGrades
 {
@@ -32,11 +33,17 @@ namespace RazorPagesGrades
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            services.AddDbContext<Models.ApplicationDbContext>();
+
             services.AddTransient<ICertificate, CertificateTable>();
-            services.AddSingleton<GradeBook>(); 
-            services.AddSingleton<ISubjectManipulator>(x => x.GetRequiredService<GradeBook>());
-            services.AddSingleton<IGradeManipulator>(x => x.GetRequiredService<GradeBook>());
-            services.AddSingleton<IGradebook>(x => x.GetRequiredService<GradeBook>());
+            //services.AddSingleton<GradeBook>();
+            //services.AddSingleton<ISubjectManipulator>(x => x.GetRequiredService<GradeBook>());
+            //services.AddSingleton<IGradeManipulator>(x => x.GetRequiredService<GradeBook>());
+            //services.AddSingleton<IGradebook>(x => x.GetRequiredService<GradeBook>());
+
+            services.AddTransient<ISubjectManipulator, SubjectManipulator>();
+            services.AddTransient<IGradebook, GradeBook>();
+            services.AddTransient<IGradeManipulator, GradeBook>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
